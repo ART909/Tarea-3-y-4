@@ -12,6 +12,7 @@ import pylab
 #ojo debes crear este archivo en la misma carpeta
 
 G = nx.read_gml('emp2.txt')
+G2 = nx.read_gml('emp2.txt')
 
 
 #Agregamos mas conexiones
@@ -45,8 +46,10 @@ pos=nx.spring_layout(G)
 
 pylab.figure("Mi Grafo")
 
-nx.draw_networkx(G, pos, with_labels=True, node_color = "b")
-
+nx.draw_networkx_nodes(G, pos, node_color = "b")
+nx.draw_networkx_labels(G, pos)
+nx.draw_networkx_nodes(G2, pos, node_color = "r")
+nx.draw_networkx_labels(G2, pos)
 nx.draw_networkx_edges(G,pos, width=1.2, font_color="b")
 nx.draw_networkx_edge_labels(G,pos)
 
