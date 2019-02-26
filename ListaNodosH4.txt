@@ -1,0 +1,5 @@
+San Jose,Cartago,Heredia,Alajuela
+0,20,9,13
+20,0,27,30
+9,27,0,11
+13,30,11,0
