@@ -1,0 +1,10 @@
+San Jose,Cartago,25
+San Jose,Heredia,11
+San Jose,Alajuela,19
+Alajuela,Heredia,12
+Alajuela,Guanacaste,20
+Alajuela,Puntarenas,82
+Puntarenas,San Jose,100
+Puntarenas,Limon,260
+Limon,Cartago,140
+Limon,Heredia,160
