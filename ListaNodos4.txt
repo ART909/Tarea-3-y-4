@@ -1,0 +1,5 @@
+San Jose,Cartago,25
+San Jose,Heredia,11
+San Jose,Alajuela,19
+Alajuela,Heredia,12
+Alajuela,Cartago,39
