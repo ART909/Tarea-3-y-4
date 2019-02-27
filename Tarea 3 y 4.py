@@ -4,10 +4,8 @@ import pylab
 import GafoEu as Eu
 
 #creamos el grafico en blanco
-flag = False
-G = nx.Graph()
-G2 = nx.Graph()
-nodosRutaOptima = []
+G = nx.DiGraph()
+G2 = nx.DiGraph()
 pylab.figure("Grafico Dirigido")
 
 #Esta funcion regresa una lista de Nodos, cada nodo se conforma
@@ -67,9 +65,9 @@ def agregarNodosGraficos(listaNodos):
         G.add_edge(x[0], x[1], KM = x[2])
 
 def agregarNodosGraficosMejorRuta(listaNodos):   
-    #G.add_edge("Estacion 3", "Estacion 1", V = 33.5)
+    print(listaNodos)
     for x in listaNodos:
-        G2.add_edge(x[0], x[1], KM = x[2])
+        G2.add_node(x)
         
     
 def imprimirGrafico(grafo, color):
@@ -90,6 +88,17 @@ def obtenerEuristica(heurisitica,final):
             contador +=1
     return tablaHeuristica
 
+
+def sacarVecinos(nombre, ListaNodos):
+
+    listavecinos = []
+
+    for x in ListaNodos:
+        if x[0] == nombre:
+            listavecinos.append(x[1])
+
+    return listavecinos
+    
 def creadorRuta(listaRutas,tablaEuristica,ListaNodos,final):
     
     rutas = []
@@ -104,19 +113,12 @@ def creadorRuta(listaRutas,tablaEuristica,ListaNodos,final):
             menor = listaRutas[x][0]
             cont = x
 
-    print(listaRutas)    
-    print(listaRutas[cont][1][-1])
     if listaRutas[cont][1][-1] != final:
-        
-        vecinos = G.neighbors(listaRutas[cont][1][-1])
-        print("nodo: " + listaRutas[cont][1][-1])
+        vecinos = sacarVecinos(listaRutas[cont][1][-1], ListaNodos)#G.neighbors(listaRutas[cont][1][-1])
 
         for x in vecinos:
             
-            print("vecionos: " + x)
-            peso = 0
-
-            
+            peso = 0    
             peso = int(listaRutas[cont][0]) + int(G[listaRutas[cont][1][-1]][x].get("KM"))+ int(tablaEuristica[1][tablaEuristica[0].index(x)])
             
             ruta = listaRutas[cont][1].copy()
@@ -125,20 +127,21 @@ def creadorRuta(listaRutas,tablaEuristica,ListaNodos,final):
             listaRutas.append([peso,ruta])
 
         listaRutas.pop(cont)
-        print(flag)
     
-        return(listaRutas)
+        return([listaRutas, False])
+
     
-    elif listaRutas[cont][1][-1] == final and menor == listaRutas[cont][0]:
-        flag == True
-        print(flag)
-    
-        return(listaRutas[cont][1][-1])
+    if listaRutas[cont][1][-1] == final and menor == listaRutas[cont][0]:
+        print("Lo encontre")
+        return([listaRutas[cont][1] , True])
+
+
+        
 
 def procesar(tablaEuristica,ListaNodos,inicial,final):
     cont = 0
     listaRutas = []
-
+    flag = False
 
     for x in tablaEuristica[0]:
         if x == inicial:
@@ -146,15 +149,20 @@ def procesar(tablaEuristica,ListaNodos,inicial,final):
         else:
             cont +=1
     while flag == False:
-        listaRutas = creadorRuta(listaRutas,tablaEuristica,ListaNodos,final)
 
-    print(listaRutas)
+        resultado = creadorRuta(listaRutas,tablaEuristica,ListaNodos,final)
+        listaRutas = resultado[0]
+        flag = resultado[1]
+
+    return(listaRutas)
     
 
 def AlgoritmoA(heurisitica,ListaNodos,inicial,final):
 
     tablaEuristica = obtenerEuristica(heurisitica,final)
-    procesar(tablaEuristica,ListaNodos,inicial,final)
+    ruta = procesar(tablaEuristica,ListaNodos,inicial,final)
+
+    return ruta
     
     
     
@@ -164,11 +172,10 @@ def AlgoritmoA(heurisitica,ListaNodos,inicial,final):
     
 listaNodosInicial = leerTXTNodos()
 agregarNodosGraficos(listaNodosInicial)
-agregarNodosGraficosMejorRuta(listaNodosInicial[:3])
 
 #Instrucciones para imprimir el grafico
 pos = nx.spring_layout(G)
-imprimirGrafico(G,"g")
+imprimirGrafico(G,"R")
 
 #LLamado a leer la Heuristica
 cantidadNodos = len(G.nodes())
@@ -176,6 +183,7 @@ heuristica = leerTXTHeuristica(cantidadNodos)
 
 rutaOptima = AlgoritmoA(heuristica, listaNodosInicial,"Heredia","Cartago")
 
+agregarNodosGraficosMejorRuta(rutaOptima)
 imprimirGrafico(G2,"b")
 
 #Muestra el grafico
